@@ -40,7 +40,6 @@ class CustomDialogs {
                     SizedBox(width: 10.0),
                     Text(
                       message,
-                      style: TextStyle(fontWeight: FontWeight.bold),
                     )
                   ],
                 )),
