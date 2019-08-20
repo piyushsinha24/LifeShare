@@ -69,7 +69,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   Navigator.pushReplacement(context,
                       MaterialPageRoute(builder: (context) => HomePage()));
                 },
-                child: Text('Alright'),
+                child: Icon(Icons.arrow_forward,color: Color.fromARGB(1000, 221, 46, 68),),
               ),
             ],
           );

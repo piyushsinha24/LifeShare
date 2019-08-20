@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 //
 import './auth.dart';
+import './mapView.dart';
+
 
 class HomePage extends StatefulWidget {
   @override
@@ -164,6 +166,7 @@ class _HomePageState extends State<HomePage> {
           height: 800.0,
           width: double.infinity,
           color: Colors.white,
+          child: MapView(),
         ),
       ),
     );
