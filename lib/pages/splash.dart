@@ -4,11 +4,14 @@ import 'dart:async';
 //pages import
 import './auth.dart';
 import './home.dart';
+
 class SplashScreen extends StatefulWidget {
   @override
   _SplashScreenState createState() => new _SplashScreenState();
 }
-class _SplashScreenState extends State<SplashScreen>  with SingleTickerProviderStateMixin {
+
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
   Animation _logoAnimation;
   AnimationController _logoController;
   final FirebaseAuth appAuth = FirebaseAuth.instance;
@@ -21,7 +24,7 @@ class _SplashScreenState extends State<SplashScreen>  with SingleTickerProviderS
 
     _logoAnimation = CurvedAnimation(
       parent: _logoController,
-      curve: Curves.easeOut,
+      curve: Curves.easeIn,
     );
 
     _logoAnimation.addListener(() {
@@ -35,35 +38,42 @@ class _SplashScreenState extends State<SplashScreen>  with SingleTickerProviderS
     super.initState();
     startTime();
   }
-   Widget _buildLogo() {
+
+  Widget _buildLogo() {
     return Center(
       child: Container(
-        height: _logoAnimation.value * 250,
-        width: _logoAnimation.value * 250,
-        child: Image.asset(
-          'assets/logo.png',
-          fit: BoxFit.contain,
+        child: Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: Text("Donate Blood. Share Life",style: TextStyle(color: Colors.black87,fontSize: _logoAnimation.value * 25,),),
         ),
       ),
     );
   }
+
   Future<void> navigationPage() async {
     FirebaseUser currentUser = await appAuth.currentUser();
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(
             builder: (context) =>
-            currentUser == null ? AuthPage(appAuth) : HomePage()));
+                currentUser == null ? AuthPage(appAuth) : HomePage()));
   }
 
   startTime() async {
     var _duration = new Duration(seconds: 2);
     return new Timer(_duration, navigationPage);
   }
- @override
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _buildLogo(),
+          body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+              image: AssetImage("assets/splash.png"), fit: BoxFit.cover),
+        ),
+        child: _buildLogo(),
+      ),
     );
   }
 }

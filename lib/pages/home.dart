@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 //
 import './auth.dart';
 import './mapView.dart';
@@ -124,7 +125,7 @@ class _HomePageState extends State<HomePage> {
             ListTile(
               title: Text("Home"),
               leading: Icon(
-                Icons.home,
+                FontAwesomeIcons.home,
                 color: Color.fromARGB(1000, 221, 46, 68),
               ),
               onTap: () {
@@ -135,7 +136,7 @@ class _HomePageState extends State<HomePage> {
             ListTile(
               title: Text("Profile"),
               leading: Icon(
-                Icons.account_circle,
+                FontAwesomeIcons.idBadge,
                 color: Color.fromARGB(1000, 221, 46, 68),
               ),
               onTap: () {
@@ -145,7 +146,7 @@ class _HomePageState extends State<HomePage> {
             ListTile(
               title: Text("Logout"),
               leading: Icon(
-                Icons.error_outline,
+                FontAwesomeIcons.signOutAlt,
                 color: Color.fromARGB(1000, 221, 46, 68),
               ),
               onTap: () async {

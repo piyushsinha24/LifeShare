@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:lifeshare/utils/customDialogs.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 //
 import 'register.dart';
 import 'package:lifeshare/utils/customDialogs.dart';

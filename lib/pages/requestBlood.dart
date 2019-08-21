@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:geolocator/geolocator.dart';
+//
+import './home.dart';
 class RequestBlood extends StatefulWidget {
+  double _lat,_lng;
+  RequestBlood(this._lat,this._lng);
   @override
   _RequestBloodState createState() => _RequestBloodState();
 }
@@ -11,11 +17,53 @@ class _RequestBloodState extends State<RequestBlood> {
   List<String> _bloodGroup = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
   String _selected = '';
   String _qty;
+  String _phone;
+  String _address;
   bool _categorySelected = false;
   DateTime selectedDate = DateTime.now();
-  int flag=0;
+  var formattedDate;
+  int flag = 0;
+  FirebaseUser currentUser;
+  List<Placemark> placemark;
+  @override
+  void initState() {
+    super.initState();
+    _loadCurrentUser();
+    getAddress();
+  }
+
+  bool isLoggedIn() {
+    if (FirebaseAuth.instance.currentUser() != null) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<void> addData(_user) async {
+    if (isLoggedIn()) {
+      Firestore.instance
+          .collection('Blood Request Details')
+          .document(_user['uid'])
+          .setData(_user)
+          .catchError((e) {
+        print(e);
+      });
+    } else {
+      print('You need to be logged In');
+    }
+  }
+
+  Future<void> _loadCurrentUser() async {
+    await FirebaseAuth.instance.currentUser().then((FirebaseUser user) {
+      setState(() {
+        // call setState to rebuild the view
+        this.currentUser = user;
+      });
+    });
+  }
+
   Future<Null> _selectDate(BuildContext context) async {
-    flag=1;
     final DateTime picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
@@ -24,9 +72,37 @@ class _RequestBloodState extends State<RequestBlood> {
     if (picked != null && picked != selectedDate)
       setState(() {
         selectedDate = picked;
+        flag = 1;
       });
+    var date = DateTime.parse(selectedDate.toString());
+    formattedDate = "${date.day}-${date.month}-${date.year}";
   }
-
+ Future<bool> dialogTrigger(BuildContext context) async {
+    return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Success'),
+            content: Text('Blood Request Submitted'),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () {
+                  formkey.currentState.reset();
+                  Navigator.pop(context);
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => HomePage()));
+                },
+                child: Icon(Icons.arrow_forward,color: Color.fromARGB(1000, 221, 46, 68),),
+              ),
+            ],
+          );
+        });
+  }
+  void getAddress()async{
+     placemark = await Geolocator().placemarkFromCoordinates(widget._lat, widget._lng);
+     _address=placemark[0].name.toString()+","+placemark[0].locality.toString()+", Postal Code:"+placemark[0].postalCode.toString();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -112,7 +188,7 @@ class _RequestBloodState extends State<RequestBlood> {
                             ),
                           ),
                           validator: (value) => value.isEmpty
-                              ? "Name field can't be empty"
+                              ? "Quantity field can't be empty"
                               : null,
                           onSaved: (value) => _qty = value,
                           keyboardType: TextInputType.number,
@@ -127,15 +203,57 @@ class _RequestBloodState extends State<RequestBlood> {
                               icon: Icon(FontAwesomeIcons.calendar),
                               color: Color.fromARGB(1000, 221, 46, 68),
                             ),
-                             flag==0?Text("Due Date",style: TextStyle(color: Colors.black54,fontSize: 15.0),):Text("${selectedDate.toLocal()}"),
+                            flag == 0
+                                ? Text(
+                                    "<< Pick up a Due Date",
+                                    style: TextStyle(
+                                        color: Colors.black54, fontSize: 15.0),
+                                  )
+                                : Text(formattedDate),
                           ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(18.0),
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            hintText: 'Phone Number',
+                            icon: Icon(
+                              FontAwesomeIcons.mobile,
+                              color: Color.fromARGB(1000, 221, 46, 68),
+                            ),
+                          ),
+                          validator: (value) => value.isEmpty
+                              ? "Phone Number field can't be empty"
+                              : null,
+                          onSaved: (value) => _phone = value,
+                          maxLength: 10,
+                          keyboardType: TextInputType.number,
                         ),
                       ),
                       SizedBox(
                         height: 30.0,
                       ),
                       RaisedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          if (!formkey.currentState.validate()) return;
+                        formkey.currentState.save();
+                          final Map<String, dynamic> BloodRequestDetails = {
+                            'uid': currentUser.uid,
+                            'bloodGroup': _selected,
+                            'quantity': _qty,
+                            'dueDate': formattedDate,
+                            'phone': _phone,
+                            'latitude': widget._lat,
+                            'longitude': widget._lng,
+                            'address' :  _address,
+                          };
+                          addData(BloodRequestDetails).then((result) {
+                            dialogTrigger(context);
+                          }).catchError((e) {
+                            print(e);
+                          });
+                        },
                         textColor: Colors.white,
                         padding: EdgeInsets.only(left: 5.0, right: 5.0),
                         color: Color.fromARGB(1000, 221, 46, 68),

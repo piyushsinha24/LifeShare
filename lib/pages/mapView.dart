@@ -72,7 +72,6 @@ class _MapViewState extends State<MapView> {
   void setmapstyle(String mapStyle) {
     _controller.setMapStyle(mapStyle);
   }
-
   @override
   Widget build(BuildContext context) {
     if (isMapCreated) {
@@ -104,7 +103,7 @@ class _MapViewState extends State<MapView> {
           backgroundColor:Color.fromARGB(1000, 221, 46, 68), 
           onPressed: (){
              Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => RequestBlood()));
+                      MaterialPageRoute(builder: (context) => RequestBlood(position.latitude,position.longitude)));
           },
          icon: Icon(FontAwesomeIcons.burn),
          label: Text("Request Blood"),
