@@ -107,15 +107,16 @@ class _HomePageState extends State<HomePage> {
               decoration: BoxDecoration(
                 color: Color.fromARGB(1000, 221, 46, 68),
               ),
-              accountName: Text(currentUser == null ? "" : _name),
+              accountName: Text(currentUser == null ? "" : _name,style: TextStyle(fontSize: 22.0,),),
               accountEmail: Text(currentUser == null ? "" : _email),
               currentAccountPicture: CircleAvatar(
                 backgroundColor: Colors.white,
                 child: Text(
                   currentUser == null ? "" : _bloodgrp,
                   style: TextStyle(
-                    fontSize: 30.0,
+                    fontSize: 45.0,
                     color: Colors.black54,
+                    fontFamily: 'SouthernAire',
                   ),
                 ),
               ),
