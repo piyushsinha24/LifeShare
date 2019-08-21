@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:flutter/services.dart';
 
 class MapView extends StatefulWidget {
   @override
@@ -42,12 +43,19 @@ class _MapViewState extends State<MapView> {
       ),
     ].toSet();
   }
+  Future<String> getJsonFile(String path) async {
+    return await rootBundle.loadString(path);
+  }
+
   void setmapstyle(String mapStyle) {
     _controller.setMapStyle(mapStyle);
   }
 
   @override
   Widget build(BuildContext context) {
+    if (isMapCreated) {
+      getJsonFile('assets/customStyle.json').then(setmapstyle);
+    }
     return _child;
   }
   Widget mapWidget(){
@@ -61,6 +69,7 @@ class _MapViewState extends State<MapView> {
       onMapCreated: (GoogleMapController controller) {
         _controller = controller;
         isMapCreated = true;
+        getJsonFile('assets/customStyle.json').then(setmapstyle);
       },
     );
   }
