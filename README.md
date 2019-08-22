@@ -1,11 +1,14 @@
-# lifeshare
+# Lifeshare
 
-A new Flutter project.
+Final year Project using FLUTFIRE 
+Status: Under development
+
+A blood donation app which connects recipients with donors within a radius. 
+## Flutter | Firebase | GoogleMaps | Geocoding
+
+
 
 ## Getting Started
-
-This project is a starting point for a Flutter application.
-
 A few resources to get you started if this is your first Flutter project:
 
 - [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
