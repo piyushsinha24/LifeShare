@@ -8,6 +8,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:flutter/services.dart';
 //
 import './requestBlood.dart';
+//
+import 'package:lifeshare/utils/customRippleIndicator.dart';
 class MapView extends StatefulWidget {
   @override
   _MapViewState createState() => _MapViewState();
@@ -24,7 +26,7 @@ class _MapViewState extends State<MapView> {
 
   @override
   void initState() {
-    _child = _buildLoadingChild();
+    _child = RippleIndicator("Getting Location");
     getIcon();
     getCurrentLocation();
     super.initState();
@@ -111,25 +113,6 @@ class _MapViewState extends State<MapView> {
               ),
       )
       ],
-    );
-  }
-
-  Widget _buildLoadingChild() {
-    return Center(
-      child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              Padding(
-                  padding: EdgeInsets.all(2.0),
-                  child: CircularProgressIndicator()),
-              SizedBox(width: 10.0),
-              Text(
-                "Getting Location",
-              ),
-            ],
-          )),
     );
   }
 }

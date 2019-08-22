@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 class CustomDialogs {
   static void alertDialog(
       {@required BuildContext context,
@@ -22,7 +21,7 @@ class CustomDialogs {
         });
   }
 
- static void progressDialog(
+  static void progressDialog(
       {@required BuildContext context, @required String message}) {
     showDialog(
         context: context,

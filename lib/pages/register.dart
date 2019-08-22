@@ -53,30 +53,7 @@ class _RegisterPageState extends State<RegisterPage> {
     }
     return false;
   }
-
-  Future<bool> dialogTrigger(BuildContext context) async {
-    return showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Success'),
-            content: Text('User Added'),
-            actions: <Widget>[
-              FlatButton(
-                onPressed: () {
-                  formkey.currentState.reset();
-                  Navigator.pop(context);
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => HomePage()));
-                },
-                child: Icon(Icons.arrow_forward,color: Color.fromARGB(1000, 221, 46, 68),),
-              ),
-            ],
-          );
-        });
-  }
-
+  
   void validate_submit(BuildContext context) async {
     if (validate_save()) {
       try {
@@ -94,7 +71,9 @@ createUserWithEmailAndPassword(email: _email, password: _password))
           'bloodgroup':_selected,
         };
         addData(UserDetails).then((result) {
-          dialogTrigger(context);
+          print("User Added");
+            Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => HomePage()));
         }).catchError((e) {
           print(e);
         });

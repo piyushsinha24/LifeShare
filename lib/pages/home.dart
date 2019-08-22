@@ -6,7 +6,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 //
 import './auth.dart';
 import './mapView.dart';
-
+//
+import 'package:lifeshare/utils/customWaveIndicator.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -33,11 +34,11 @@ class _HomePageState extends State<HomePage> {
       _name = _userInfo['name'];
       _email = _userInfo['email'];
       _bloodgrp = _userInfo['bloodgroup'];
-      _child=_myWidget();
+      _child = _myWidget();
     });
   }
 
-  Future<void> _loadCurrentUser() async{
+  Future<void> _loadCurrentUser() async {
     await FirebaseAuth.instance.currentUser().then((FirebaseUser user) {
       setState(() {
         // call setState to rebuild the view
@@ -49,7 +50,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     // TODO: implement initState'
-    _child=_buildLoadingChild();
+    _child = WaveIndicator();
     _loadCurrentUser();
     _fetchUserInfo();
     super.initState();
@@ -64,27 +65,7 @@ class _HomePageState extends State<HomePage> {
     ));
     return _child;
   }
-   Widget _buildLoadingChild() {
-    return Scaffold(
-     body: Center(
-        child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Padding(
-                    padding: EdgeInsets.all(2.0),
-                    child: CircularProgressIndicator()),
-                SizedBox(width: 10.0),
-                Text(
-                  "Loading",
-                ),
-              ],
-            )),
-      ),
-    );
-  }
-  Widget _myWidget(){
+  Widget _myWidget() {
     return Scaffold(
       backgroundColor: Color.fromARGB(1000, 221, 46, 68),
       appBar: AppBar(
@@ -108,14 +89,19 @@ class _HomePageState extends State<HomePage> {
               decoration: BoxDecoration(
                 color: Color.fromARGB(1000, 221, 46, 68),
               ),
-              accountName: Text(currentUser == null ? "" : _name,style: TextStyle(fontSize: 22.0,),),
+              accountName: Text(
+                currentUser == null ? "" : _name,
+                style: TextStyle(
+                  fontSize: 22.0,
+                ),
+              ),
               accountEmail: Text(currentUser == null ? "" : _email),
               currentAccountPicture: CircleAvatar(
                 backgroundColor: Colors.white,
                 child: Text(
                   currentUser == null ? "" : _bloodgrp,
                   style: TextStyle(
-                    fontSize: 45.0,
+                    fontSize: 30.0,
                     color: Colors.black54,
                     fontFamily: 'SouthernAire',
                   ),
@@ -173,5 +159,4 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
 }

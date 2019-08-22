@@ -5,9 +5,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geolocator/geolocator.dart';
 //
 import './home.dart';
+
 class RequestBlood extends StatefulWidget {
-  double _lat,_lng;
-  RequestBlood(this._lat,this._lng);
+  double _lat, _lng;
+  RequestBlood(this._lat, this._lng);
   @override
   _RequestBloodState createState() => _RequestBloodState();
 }
@@ -77,7 +78,8 @@ class _RequestBloodState extends State<RequestBlood> {
     var date = DateTime.parse(selectedDate.toString());
     formattedDate = "${date.day}-${date.month}-${date.year}";
   }
- Future<bool> dialogTrigger(BuildContext context) async {
+
+  Future<bool> dialogTrigger(BuildContext context) async {
     return showDialog(
         context: context,
         barrierDismissible: false,
@@ -93,16 +95,26 @@ class _RequestBloodState extends State<RequestBlood> {
                   Navigator.pushReplacement(context,
                       MaterialPageRoute(builder: (context) => HomePage()));
                 },
-                child: Icon(Icons.arrow_forward,color: Color.fromARGB(1000, 221, 46, 68),),
+                child: Icon(
+                  Icons.arrow_forward,
+                  color: Color.fromARGB(1000, 221, 46, 68),
+                ),
               ),
             ],
           );
         });
   }
-  void getAddress()async{
-     placemark = await Geolocator().placemarkFromCoordinates(widget._lat, widget._lng);
-     _address=placemark[0].name.toString()+","+placemark[0].locality.toString()+", Postal Code:"+placemark[0].postalCode.toString();
+
+  void getAddress() async {
+    placemark =
+        await Geolocator().placemarkFromCoordinates(widget._lat, widget._lng);
+    _address = placemark[0].name.toString() +
+        "," +
+        placemark[0].locality.toString() +
+        ", Postal Code:" +
+        placemark[0].postalCode.toString();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -237,7 +249,7 @@ class _RequestBloodState extends State<RequestBlood> {
                       RaisedButton(
                         onPressed: () {
                           if (!formkey.currentState.validate()) return;
-                        formkey.currentState.save();
+                          formkey.currentState.save();
                           final Map<String, dynamic> BloodRequestDetails = {
                             'uid': currentUser.uid,
                             'bloodGroup': _selected,
@@ -246,7 +258,7 @@ class _RequestBloodState extends State<RequestBlood> {
                             'phone': _phone,
                             'latitude': widget._lat,
                             'longitude': widget._lng,
-                            'address' :  _address,
+                            'address': _address,
                           };
                           addData(BloodRequestDetails).then((result) {
                             dialogTrigger(context);
