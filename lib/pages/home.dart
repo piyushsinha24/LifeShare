@@ -120,9 +120,9 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             ListTile(
-              title: Text("Profile"),
+              title: Text("Blood Requests"),
               leading: Icon(
-                FontAwesomeIcons.idBadge,
+                FontAwesomeIcons.burn,
                 color: Color.fromARGB(1000, 221, 46, 68),
               ),
               onTap: () {

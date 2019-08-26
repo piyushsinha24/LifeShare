@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 //
 import 'package:lifeshare/utils/customDialogs.dart';
 import './home.dart';
+
 class RegisterPage extends StatefulWidget {
   final FirebaseAuth appAuth;
   RegisterPage(this.appAuth);
@@ -18,12 +19,10 @@ class _RegisterPageState extends State<RegisterPage> {
   String _email;
   String _password;
   String _name;
-   List<String> _bloodGroup = [
-    'A+','A-','B+','B-','O+','O-','AB+','AB-'
-  ];
+  List<String> _bloodGroup = ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
   String _selected = '';
-  bool _categorySelected=false;
-   bool isLoggedIn() {
+  bool _categorySelected = false;
+  bool isLoggedIn() {
     if (FirebaseAuth.instance.currentUser() != null) {
       return true;
     } else {
@@ -53,27 +52,28 @@ class _RegisterPageState extends State<RegisterPage> {
     }
     return false;
   }
-  
+
   void validate_submit(BuildContext context) async {
     if (validate_save()) {
       try {
         CustomDialogs.progressDialog(
             context: context, message: 'Registration under process');
-       FirebaseUser user = (await widget.appAuth.
-createUserWithEmailAndPassword(email: _email, password: _password))
-.user;
+        FirebaseUser user = (await widget.appAuth
+                .createUserWithEmailAndPassword(
+                    email: _email, password: _password))
+            .user;
         Navigator.pop(context);
         print('Registered User: ${user.uid}');
         final Map<String, dynamic> UserDetails = {
           'uid': user.uid,
           'name': _name,
-          'email':_email,
-          'bloodgroup':_selected,
+          'email': _email,
+          'bloodgroup': _selected,
         };
         addData(UserDetails).then((result) {
           print("User Added");
-            Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => HomePage()));
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => HomePage()));
         }).catchError((e) {
           print(e);
         });
@@ -92,14 +92,14 @@ createUserWithEmailAndPassword(email: _email, password: _password))
                       onPressed: () {
                         Navigator.of(context).pop();
                         Navigator.of(context).pop();
-                      }
-                  )
+                      })
                 ],
               );
             });
       }
     }
   }
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -144,7 +144,7 @@ createUserWithEmailAndPassword(email: _email, password: _password))
                           decoration: InputDecoration(
                             hintText: 'Name',
                             icon: Icon(
-                              Icons.account_circle,
+                              FontAwesomeIcons.user,
                               color: Color.fromARGB(1000, 221, 46, 68),
                             ),
                           ),
@@ -160,7 +160,7 @@ createUserWithEmailAndPassword(email: _email, password: _password))
                           decoration: InputDecoration(
                             hintText: 'Email ID',
                             icon: Icon(
-                              Icons.mail_outline,
+                              FontAwesomeIcons.envelope,
                               color: Color.fromARGB(1000, 221, 46, 68),
                             ),
                           ),
@@ -176,7 +176,7 @@ createUserWithEmailAndPassword(email: _email, password: _password))
                           decoration: InputDecoration(
                             hintText: 'Password',
                             icon: Icon(
-                              Icons.lock_outline,
+                              FontAwesomeIcons.userLock,
                               color: Color.fromARGB(1000, 221, 46, 68),
                             ),
                           ),
@@ -187,13 +187,18 @@ createUserWithEmailAndPassword(email: _email, password: _password))
                           onSaved: (value) => _password = value,
                         ),
                       ),
-                       Container(
+                      Container(
                         child: Column(
                           children: <Widget>[
                             Container(
                               padding: EdgeInsets.only(top: 20.0),
                               child: DropdownButton(
-                                hint: Text('Please choose a Blood Group',style: TextStyle(color: Color.fromARGB(1000, 221, 46, 68),),),
+                                hint: Text(
+                                  'Please choose a Blood Group',
+                                  style: TextStyle(
+                                    color: Color.fromARGB(1000, 221, 46, 68),
+                                  ),
+                                ),
                                 iconSize: 40.0,
                                 items: _bloodGroup.map((val) {
                                   return new DropdownMenuItem<String>(
@@ -204,7 +209,7 @@ createUserWithEmailAndPassword(email: _email, password: _password))
                                 onChanged: (newValue) {
                                   setState(() {
                                     _selected = newValue;
-                                    this._categorySelected=true;
+                                    this._categorySelected = true;
                                   });
                                 },
                               ),
@@ -215,16 +220,19 @@ createUserWithEmailAndPassword(email: _email, password: _password))
                             Text(
                               _selected,
                               style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20.0,
-                                  color: Color.fromARGB(1000, 221, 46, 68),),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20.0,
+                                color: Color.fromARGB(1000, 221, 46, 68),
+                              ),
                             ),
-                          ],),),
+                          ],
+                        ),
+                      ),
                       SizedBox(
                         height: 30.0,
                       ),
                       RaisedButton(
-                        onPressed:()=>validate_submit(context),
+                        onPressed: () => validate_submit(context),
                         textColor: Colors.white,
                         padding: EdgeInsets.only(left: 5.0, right: 5.0),
                         color: Color.fromARGB(1000, 221, 46, 68),
