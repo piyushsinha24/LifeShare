@@ -4,12 +4,16 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 //
 import './requestBlood.dart';
 //
 import 'package:lifeshare/utils/customRippleIndicator.dart';
+import 'package:lifeshare/utils/customDialogs.dart';
+
 class MapView extends StatefulWidget {
   @override
   _MapViewState createState() => _MapViewState();
@@ -23,17 +27,145 @@ class _MapViewState extends State<MapView> {
   BitmapDescriptor bitmapImage;
   Marker marker;
   Uint8List markerIcon;
-
+  int i = 0;
+  var clients = [];
+  var lat = [];
+  var lng = [];
+  String _name;
+  Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
   @override
   void initState() {
     _child = RippleIndicator("Getting Location");
     getIcon();
     getCurrentLocation();
+    populateClients();
     super.initState();
+  }
+
+  Future<Null> _fetchrequestName(requestId) async {
+    Map<String, dynamic> _userInfo;
+    DocumentSnapshot _snapshot = await Firestore.instance
+        .collection("User Details")
+        .document(requestId)
+        .get();
+
+    _userInfo = _snapshot.data;
+
+    this.setState(() {
+      _name = _userInfo['name'];
+    });
+  }
+
+  populateClients() {
+    clients = [];
+    Firestore.instance
+        .collection('Blood Request Details')
+        .getDocuments()
+        .then((docs) {
+      if (docs.documents.isNotEmpty) {
+        for (int i = 0; i < docs.documents.length; ++i) {
+          clients.add(docs.documents[i].data);
+          initMarker(docs.documents[i].data, docs.documents[i].documentID);
+        }
+      }
+    });
+  }
+
+  void initMarker(request, requestId) {
+    var markerIdVal = requestId;
+    final MarkerId markerId = MarkerId(markerIdVal);
+    // creating a new MARKER
+    final Marker marker = Marker(
+        markerId: markerId,
+        position:
+            LatLng(request['location'].latitude, request['location'].longitude),
+        onTap: () async {
+          CustomDialogs.progressDialog(context: context, message: 'Fetching');
+          await _fetchrequestName(requestId);
+          Navigator.pop(context);
+          return showModalBottomSheet(
+              backgroundColor: Colors.transparent,
+              context: context,
+              builder: (BuildContext context) {
+                return Container(
+                  margin: const EdgeInsets.only(top: 5, left: 15, right: 15),
+                  height: 300.0,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(topLeft:Radius.circular(15),topRight:Radius.circular(15)),
+                  ),
+                  child: Center(
+                    child: Column(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: CircleAvatar(
+                            child: Text(
+                              request['bloodGroup'],
+                              style: TextStyle(
+                                fontFamily: 'SouthernAire',
+                                fontSize: 35.0,
+                                color: Colors.white,
+                              ),
+                            ),
+                            radius: 45.0,
+                            backgroundColor: Color.fromARGB(1000, 221, 46, 68),
+                          ),
+                        ),
+                        Text(
+                          _name,
+                          style:
+                              TextStyle(fontSize: 22.0, color: Colors.black87),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Text(
+                              "Quantity: " + request['quantity'] + " L",
+                              style:
+                                  TextStyle(fontSize: 18.0, color: Colors.black87),
+                            ),
+                            Text(
+                          "Due Date: " + request['dueDate'],
+                          style:
+                              TextStyle(fontSize: 18.0, color: Colors.red),
+                        ),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Text(
+                            request['address'],
+                          ),
+                        ),
+                         RaisedButton(
+                        onPressed: (){
+                          UrlLauncher.launch("tel:${request['phone']}");
+                        },
+                        textColor: Colors.white,
+                        padding: EdgeInsets.only(left: 5.0, right: 5.0),
+                        color: Color.fromARGB(1000, 221, 46, 68),
+                        child: Text("CALL"),
+                        shape: new RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(30.0)),
+                      ),
+                      ],
+                    ),
+                  ),
+                );
+              });
+        });
+
+    setState(() {
+      // adding a new marker to map
+      markers[markerId] = marker;
+      print(markerId);
+    });
   }
 
   void getCurrentLocation() async {
     Position res = await Geolocator().getCurrentPosition();
+    print(Position);
     setState(() {
       position = res;
       _child = mapWidget();
@@ -60,7 +192,7 @@ class _MapViewState extends State<MapView> {
   Set<Marker> _createMarker() {
     return <Marker>[
       Marker(
-        markerId: MarkerId("marker_1"),
+        markerId: MarkerId("home"),
         position: LatLng(position.latitude, position.longitude),
         icon: BitmapDescriptor.fromBytes(markerIcon),
       ),
@@ -74,6 +206,7 @@ class _MapViewState extends State<MapView> {
   void setmapstyle(String mapStyle) {
     _controller.setMapStyle(mapStyle);
   }
+
   @override
   Widget build(BuildContext context) {
     if (isMapCreated) {
@@ -84,34 +217,38 @@ class _MapViewState extends State<MapView> {
 
   Widget mapWidget() {
     return Stack(
-          children:<Widget>[ GoogleMap(
-        mapType: MapType.normal,
-        initialCameraPosition: CameraPosition(
-          target: LatLng(position.latitude, position.longitude),
-          zoom: 16.0,
-        ),
-        markers: _createMarker(),
-        onMapCreated: (GoogleMapController controller) {
-          _controller = controller;
-          isMapCreated = true;
-          getJsonFile('assets/customStyle.json').then(setmapstyle);
-        },
-      ),
-      Align(
-        alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: FloatingActionButton.extended(
-          backgroundColor:Color.fromARGB(1000, 221, 46, 68), 
-          onPressed: (){
-             Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => RequestBlood(position.latitude,position.longitude)));
+      children: <Widget>[
+        GoogleMap(
+          mapType: MapType.normal,
+          initialCameraPosition: CameraPosition(
+            target: LatLng(position.latitude, position.longitude),
+            zoom: 16.0,
+          ),
+          markers: Set<Marker>.of(markers.values),
+          onMapCreated: (GoogleMapController controller) {
+            _controller = controller;
+            isMapCreated = true;
+            getJsonFile('assets/customStyle.json').then(setmapstyle);
           },
-         icon: Icon(FontAwesomeIcons.burn),
-         label: Text("Request Blood"),
         ),
-              ),
-      )
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: FloatingActionButton.extended(
+              backgroundColor: Color.fromARGB(1000, 221, 46, 68),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => RequestBlood(
+                            position.latitude, position.longitude)));
+              },
+              icon: Icon(FontAwesomeIcons.burn),
+              label: Text("Request Blood"),
+            ),
+          ),
+        )
       ],
     );
   }

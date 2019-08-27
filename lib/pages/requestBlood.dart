@@ -256,8 +256,7 @@ class _RequestBloodState extends State<RequestBlood> {
                             'quantity': _qty,
                             'dueDate': formattedDate,
                             'phone': _phone,
-                            'latitude': widget._lat,
-                            'longitude': widget._lng,
+                            'location': new GeoPoint(widget._lat, widget._lng),
                             'address': _address,
                           };
                           addData(BloodRequestDetails).then((result) {
