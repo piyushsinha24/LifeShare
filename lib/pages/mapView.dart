@@ -103,7 +103,6 @@ class _MapViewState extends State<MapView> {
                             child: Text(
                               request['bloodGroup'],
                               style: TextStyle(
-                                fontFamily: 'SouthernAire',
                                 fontSize: 35.0,
                                 color: Colors.white,
                               ),
