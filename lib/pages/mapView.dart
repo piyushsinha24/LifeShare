@@ -88,68 +88,73 @@ class _MapViewState extends State<MapView> {
               context: context,
               builder: (BuildContext context) {
                 return Container(
-                  margin: const EdgeInsets.only(top: 5, left: 15, right: 15),
-                  height: 300.0,
+                  margin: const EdgeInsets.all(8.0),
+                  height: 180.0,
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.only(topLeft:Radius.circular(15),topRight:Radius.circular(15)),
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
                   ),
-                  child: Center(
-                    child: Column(
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: CircleAvatar(
-                            child: Text(
-                              request['bloodGroup'],
-                              style: TextStyle(
-                                fontSize: 35.0,
-                                color: Colors.white,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: CircleAvatar(
+                              child: Text(
+                                request['bloodGroup'],
+                                style: TextStyle(
+                                  fontSize: 30.0,
+                                  color: Colors.white,
+                                ),
                               ),
+                              radius: 30.0,
+                              backgroundColor:
+                                  Color.fromARGB(1000, 221, 46, 68),
                             ),
-                            radius: 45.0,
-                            backgroundColor: Color.fromARGB(1000, 221, 46, 68),
                           ),
-                        ),
-                        Text(
-                          _name,
-                          style:
-                              TextStyle(fontSize: 22.0, color: Colors.black87),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            Text(
-                              "Quantity: " + request['quantity'] + " L",
-                              style:
-                                  TextStyle(fontSize: 18.0, color: Colors.black87),
-                            ),
-                            Text(
-                          "Due Date: " + request['dueDate'],
-                          style:
-                              TextStyle(fontSize: 18.0, color: Colors.red),
-                        ),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Text(
-                            request['address'],
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text(
+                                _name,
+                                style: TextStyle(
+                                    fontSize: 18.0, color: Colors.black87),
+                              ),
+                              Text(
+                                "Quantity: " + request['quantity'] + " L",
+                                style: TextStyle(
+                                    fontSize: 14.0, color: Colors.black87),
+                              ),
+                              Text(
+                                "Due Date: " + request['dueDate'],
+                                style: TextStyle(
+                                    fontSize: 14.0, color: Colors.red),
+                              ),
+                            ],
                           ),
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text(
+                          request['address'],
                         ),
-                         RaisedButton(
-                        onPressed: (){
+                      ),
+                      RaisedButton(
+                        onPressed: () {
                           UrlLauncher.launch("tel:${request['phone']}");
                         },
                         textColor: Colors.white,
                         padding: EdgeInsets.only(left: 5.0, right: 5.0),
                         color: Color.fromARGB(1000, 221, 46, 68),
-                        child: Text("CALL"),
+                        child: Text('CALL'),
                         shape: new RoundedRectangleBorder(
                             borderRadius: new BorderRadius.circular(30.0)),
                       ),
-                      ],
-                    ),
+                    ],
                   ),
                 );
               });
