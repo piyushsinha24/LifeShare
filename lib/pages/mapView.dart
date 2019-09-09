@@ -143,16 +143,33 @@ class _MapViewState extends State<MapView> {
                           request['address'],
                         ),
                       ),
-                      RaisedButton(
-                        onPressed: () {
-                          UrlLauncher.launch("tel:${request['phone']}");
-                        },
-                        textColor: Colors.white,
-                        padding: EdgeInsets.only(left: 5.0, right: 5.0),
-                        color: Color.fromARGB(1000, 221, 46, 68),
-                        child: Text('CALL'),
-                        shape: new RoundedRectangleBorder(
-                            borderRadius: new BorderRadius.circular(30.0)),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          RaisedButton(
+                            onPressed: () {
+                              UrlLauncher.launch("tel:${request['phone']}");
+                            },
+                            textColor: Colors.white,
+                            padding: EdgeInsets.only(left: 5.0, right: 5.0),
+                            color: Color.fromARGB(1000, 221, 46, 68),
+                            child: Icon(Icons.phone),
+                            shape: new RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(30.0)),
+                          ),
+                          RaisedButton(
+                            onPressed: () {
+                              String message="Hello $_name, I am a potential blood donor willing to help you. Reply back if you still need blood.";
+                              UrlLauncher.launch("sms:${request['phone']}?body=$message");
+                            },
+                            textColor: Colors.white,
+                            padding: EdgeInsets.only(left: 5.0, right: 5.0),
+                            color: Color.fromARGB(1000, 221, 46, 68),
+                            child: Icon(Icons.message),
+                            shape: new RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(30.0)),
+                          ),
+                        ],
                       ),
                     ],
                   ),
