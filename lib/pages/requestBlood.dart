@@ -126,7 +126,7 @@ class _RequestBloodState extends State<RequestBlood> {
         title: Text(
           "Request Blood",
           style: TextStyle(
-            fontSize: 60.0,
+            fontSize: 50.0,
             fontFamily: "SouthernAire",
             color: Colors.white,
           ),

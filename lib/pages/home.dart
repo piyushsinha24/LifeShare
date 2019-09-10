@@ -6,6 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 //
 import './auth.dart';
 import './mapView.dart';
+import 'donors.dart';
 //
 import 'package:lifeshare/utils/customWaveIndicator.dart';
 
@@ -49,13 +50,11 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    // TODO: implement initState'
     _child = WaveIndicator();
     _loadCurrentUser();
     _fetchUserInfo();
     super.initState();
   }
-
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -117,6 +116,17 @@ class _HomePageState extends State<HomePage> {
               onTap: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => HomePage()));
+              },
+            ),
+            ListTile(
+              title: Text("Blood Donors"),
+              leading: Icon(
+                FontAwesomeIcons.handsHelping,
+                color: Color.fromARGB(1000, 221, 46, 68),
+              ),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => DonorsPage()));
               },
             ),
             ListTile(

@@ -27,8 +27,6 @@ class _MapViewState extends State<MapView> {
   BitmapDescriptor bitmapImage;
   Marker marker;
   Uint8List markerIcon;
-  int i = 0;
-  var clients = [];
   var lat = [];
   var lng = [];
   String _name;
@@ -57,14 +55,12 @@ class _MapViewState extends State<MapView> {
   }
 
   populateClients() {
-    clients = [];
     Firestore.instance
         .collection('Blood Request Details')
         .getDocuments()
         .then((docs) {
       if (docs.documents.isNotEmpty) {
         for (int i = 0; i < docs.documents.length; ++i) {
-          clients.add(docs.documents[i].data);
           initMarker(docs.documents[i].data, docs.documents[i].documentID);
         }
       }
