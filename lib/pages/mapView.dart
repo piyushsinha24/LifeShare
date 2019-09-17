@@ -239,7 +239,7 @@ class _MapViewState extends State<MapView> {
           mapType: MapType.normal,
           initialCameraPosition: CameraPosition(
             target: LatLng(position.latitude, position.longitude),
-            zoom: 16.0,
+            zoom: 14.0,
           ),
           markers: Set<Marker>.of(markers.values),
           onMapCreated: (GoogleMapController controller) {
