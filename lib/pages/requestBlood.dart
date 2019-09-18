@@ -131,6 +131,13 @@ class _RequestBloodState extends State<RequestBlood> {
             color: Colors.white,
           ),
         ),
+         leading: IconButton(
+          icon: Icon(
+            FontAwesomeIcons.reply,
+            color: Colors.white,
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
       ),
       body: ClipRRect(
         borderRadius: new BorderRadius.only(

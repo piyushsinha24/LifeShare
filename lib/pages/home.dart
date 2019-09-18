@@ -3,11 +3,12 @@ import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-//
+import 'package:lifeshare/pages/campaigns.dart';
+//pages import
 import './auth.dart';
 import './mapView.dart';
 import 'donors.dart';
-//
+//utils import
 import 'package:lifeshare/utils/customWaveIndicator.dart';
 
 class HomePage extends StatefulWidget {
@@ -121,7 +122,7 @@ class _HomePageState extends State<HomePage> {
             ListTile(
               title: Text("Blood Donors"),
               leading: Icon(
-                FontAwesomeIcons.handsHelping,
+                FontAwesomeIcons.handshake,
                 color: Color.fromARGB(1000, 221, 46, 68),
               ),
               onTap: () {
@@ -137,6 +138,17 @@ class _HomePageState extends State<HomePage> {
               ),
               onTap: () {
                 //
+              },
+            ),
+            ListTile(
+              title: Text("Campaigns"),
+              leading: Icon(
+                FontAwesomeIcons.ribbon,
+                color: Color.fromARGB(1000, 221, 46, 68),
+              ),
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => CampaignsPage()));
               },
             ),
             ListTile(

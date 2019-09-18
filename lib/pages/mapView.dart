@@ -134,7 +134,7 @@ class _MapViewState extends State<MapView> {
                         ],
                       ),
                       Padding(
-                        padding: const EdgeInsets.all(5.0),
+                        padding: const EdgeInsets.only(left:12.0,right: 12.0),
                         child: Text(
                           request['address'],
                         ),
@@ -239,7 +239,7 @@ class _MapViewState extends State<MapView> {
           mapType: MapType.normal,
           initialCameraPosition: CameraPosition(
             target: LatLng(position.latitude, position.longitude),
-            zoom: 14.0,
+            zoom: 18.0,
           ),
           markers: Set<Marker>.of(markers.values),
           onMapCreated: (GoogleMapController controller) {

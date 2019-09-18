@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 //
 import 'package:lifeshare/utils/customWaveIndicator.dart';
 
@@ -51,6 +52,13 @@ class _DonorsPageState extends State<DonorsPage> {
             fontFamily: "SouthernAire",
             color: Colors.white,
           ),
+        ),
+         leading: IconButton(
+          icon: Icon(
+            FontAwesomeIcons.reply,
+            color: Colors.white,
+          ),
+          onPressed: () => Navigator.of(context).pop(),
         ),
       ),
       body: ClipRRect(
